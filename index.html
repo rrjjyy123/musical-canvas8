@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시와 음악으로 만나는 세상</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+        }
+
+        /* 헤더 */
+        .header {
+            background: linear-gradient(135deg, #ffa94d 0%, #ffd8a8 100%);
+            padding: 2rem;
+            text-align: center;
+            color: #5b3d14;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        /* 네비게이션 */
+        .nav {
+            background: #fff;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 0 2rem;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #e76f51 0%, #f4a261 100%);
+            color: #fff8f0;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(231, 111, 81, 0.25);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(244, 162, 97, 0.35);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #ffd166 0%, #ffe8a3 100%);
+            color: #5b3d14;
+        }
+
+        /* 섹션 공통 스타일 */
+        .section {
+            padding: 3rem 2rem;
+            min-height: 80vh;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #333;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(135deg, #e76f51 0%, #f4a261 100%);
+            margin: 1rem auto;
+            border-radius: 2px;
+        }
+
+        /* 활동 1: 시 목록 */
+        .poem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .poem-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            background-clip: padding-box;
+        }
+
+        .poem-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            border-color: #ffa94d;
+        }
+
+        .poem-card h3 {
+            font-size: 1.4rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .poem-card p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        /* 모달 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+        }
+
+        .close:hover {
+            color: #ff9a9e;
+        }
+
+        .poem-content {
+            margin-top: 2rem;
+            line-height: 2;
+            font-size: 1.2rem;
+            color: #333;
+            white-space: pre-line;
+        }
+
+        .poem-title-modal {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        /* 활동 2: 뮤지컬 캔버스 */
+        .activity2 {
+            background: linear-gradient(135deg, #fff3e0 0%, #fdebd3 100%);
+        }
+
+        .guide-container {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        /* 활동 2: 창작 팁 카드 */
+        .tips {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .tip-card {
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+        }
+
+        .tip-card.blue {
+            background: #fff0e1;
+            border: 1px solid #ffd7b3;
+        }
+
+        .tip-card.green {
+            background: #f1f7e6;
+            border: 1px solid #d6e7b8;
+        }
+
+        .tip-title {
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .tip-desc {
+            color: #334155;
+            line-height: 1.8;
+        }
+
+        .guide-steps {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+
+        .guide-steps li {
+            counter-increment: step-counter;
+            margin-bottom: 1.5rem;
+            padding-left: 3rem;
+            position: relative;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .guide-steps li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: linear-gradient(135deg, #e76f51 0%, #f4a261 100%);
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .canvas-btn {
+            display: block;
+            width: 300px;
+            margin: 2rem auto;
+            background: linear-gradient(135deg, #e76f51 0%, #f4a261 100%);
+            color: #5b3d14;
+            text-decoration: none;
+            padding: 1.5rem 2rem;
+            border-radius: 25px;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            box-shadow: 0 8px 25px rgba(231, 111, 81, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .canvas-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(244, 162, 97, 0.35);
+        }
+
+        /* 활동 3: 패들렛 */
+        .activity3 {
+            background: linear-gradient(135deg, #ffe8cc 0%, #ffd6a5 100%);
+        }
+
+        .padlet-container {
+            background: white;
+            border-radius: 20px;
+            padding: 1rem;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        /* 감상 후 활동 스타일 */
+        .reflection-section {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #fff8f0 0%, #fef3e7 100%);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .reflection-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .reflection-title {
+            font-size: 1.6rem;
+            color: #333;
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid #ffa94d;
+        }
+
+        .poem-selection {
+            margin-bottom: 2rem;
+        }
+
+        .selection-question {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .poem-select {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            border: 2px solid #ffa94d;
+            border-radius: 10px;
+            background: white;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .poem-select:focus {
+            outline: none;
+            border-color: #e76f51;
+            box-shadow: 0 0 10px rgba(231, 111, 81, 0.3);
+        }
+
+        .selected-poem-display {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            border-left: 5px solid #ffa94d;
+        }
+
+        .selected-poem-title {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .selected-poem-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            white-space: pre-line;
+            text-align: center;
+            padding: 1rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .reflection-question {
+            margin-top: 2rem;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .reflection-textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 1rem;
+            font-size: 1rem;
+            border: 2px solid #ffa94d;
+            border-radius: 10px;
+            resize: vertical;
+            font-family: inherit;
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .reflection-textarea:focus {
+            outline: none;
+            border-color: #e76f51;
+            box-shadow: 0 0 10px rgba(231, 111, 81, 0.3);
+        }
+
+        .emotion-words-section {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .emotion-words-btn {
+            background: linear-gradient(135deg, #e76f51 0%, #f4a261 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(231, 111, 81, 0.25);
+        }
+
+        .emotion-words-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(244, 162, 97, 0.35);
+        }
+
+        /* 감정 표현 낱말 모달 */
+        .emotion-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+        }
+
+        .emotion-modal-content {
+            background-color: #fefefe;
+            margin: 3% auto;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .emotion-close {
+            color: #aaa;
+            float: right;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+        }
+
+        .emotion-close:hover {
+            color: #ff9a9e;
+        }
+
+        .emotion-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .emotion-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .emotion-category {
+            background: linear-gradient(135deg, #fff8f0 0%, #fef3e7 100%);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border-left: 5px solid #ffa94d;
+        }
+
+        .emotion-category h4 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .emotion-words {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .emotion-word {
+            background: white;
+            color: #333;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid #ffa94d;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .emotion-word:hover {
+            background: #ffa94d;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* 색상 선택 스타일 */
+        .color-selection-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            border-left: 5px solid #ffa94d;
+        }
+
+        .color-question-text {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .color-palette {
+            margin-bottom: 1.5rem;
+        }
+
+        /* 회색조 팔레트 */
+        .grayscale-palette {
+            margin-bottom: 1.5rem;
+        }
+
+        .grayscale-title, .palette-title {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .grayscale-colors {
+            display: flex;
+            gap: 0.15rem;
+            margin-bottom: 1rem;
+            justify-content: center;
+        }
+
+        .grayscale-color {
+            width: 15px;
+            height: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            position: relative;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+
+        .grayscale-color:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            border-color: #333;
+        }
+
+        .grayscale-color.selected {
+            border-color: #fff;
+            transform: scale(1.15);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+        }
+
+        /* 메인 색상 팔레트 */
+        .main-palette {
+            margin-bottom: 1.5rem;
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 0.1rem;
+            max-width: 50%;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .color-cell {
+            width: 100%;
+            aspect-ratio: 1;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .color-cell:hover {
+            transform: scale(1.1);
+            border-color: #333;
+            z-index: 10;
+        }
+
+        .color-cell.selected {
+            border: 2px solid #fff;
+            transform: scale(1.2);
+            z-index: 10;
+            box-shadow: 0 0 0 2px #333;
+        }
+
+        .color-cell::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+
+        .color-cell.selected::after {
+            opacity: 1;
+        }
+
+        .custom-color-section {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .custom-color-btn {
+            background: linear-gradient(135deg, #e76f51 0%, #f4a261 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(231, 111, 81, 0.25);
+        }
+
+        .custom-color-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(244, 162, 97, 0.35);
+        }
+
+        .custom-color-picker {
+            width: 60px;
+            height: 60px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .selected-color-display {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .selected-color-text {
+            font-size: 1rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .selected-color-preview {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .selected-color-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #333;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .selected-color-name {
+            font-size: 1.1rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+
+            .section {
+                padding: 2rem 1rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .poem-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+                padding: 1.5rem;
+            }
+
+            .canvas-btn {
+                width: 90%;
+                font-size: 1.1rem;
+            }
+
+            .reflection-section {
+                margin-top: 2rem;
+                padding: 1rem;
+            }
+
+            .reflection-card {
+                padding: 1.5rem;
+            }
+
+            .emotion-categories {
+                grid-template-columns: 1fr;
+            }
+
+            .emotion-modal-content {
+                width: 95%;
+                margin: 5% auto;
+                padding: 1.5rem;
+            }
+
+            .emotion-words {
+                justify-content: center;
+            }
+
+            .emotion-word {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+            }
+
+            .color-grid {
+                grid-template-columns: repeat(8, 1fr);
+                gap: 0.05rem;
+                max-width: 80%;
+            }
+
+            .grayscale-colors {
+                gap: 0.1rem;
+            }
+
+            .grayscale-color {
+                width: 12px;
+                height: 10px;
+            }
+
+            .selected-color-preview {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🎵 시와 음악으로 만나는 세상 🎨</h1>
+            <p>시를 읽고 생각이나 느낌을 나누어요</p>
+        </header>
+
+        <nav class="nav">
+            <div class="nav-container">
+                <button class="nav-btn active" onclick="scrollToSection('activity1')">
+                    📖 활동 1: 시 한 모금 맛보기
+                </button>
+                <button class="nav-btn" onclick="scrollToSection('activity2')">
+                    🎨 활동 2: 마음 빛 소리 담기
+                </button>
+                <button class="nav-btn" onclick="scrollToSection('activity3')">
+                    🤝 활동 3: 함께 나누기
+                </button>
+            </div>
+        </nav>
+
+        <section id="activity1" class="section">
+            <h2 class="section-title">📖 활동 1: 시 한 모금 맛보기</h2>
+            <p style="text-align: center; font-size: 1.2rem; color: #666; margin-bottom: 2rem;">
+                마음에 드는 시를 골라 천천히 읽어보세요. 어떤 느낌이 드나요?
+            </p>
+            
+            <div class="poem-grid">
+                <div class="poem-card" onclick="openModal('내 동생', '내 동생\n\n김동환\n\n내 동생은 얍삽하다.\n우리 엄마가 무슨 일 시키면\n똥 누고 싶다면서 똥 누러 간다.\n\n내 동생은 짜증난다.\n내가 뭐 해라 하면\n으아하면서 도망간다.')">
+                    <h3>내 동생</h3>
+                  
+                </div>
+
+                <div class="poem-card" onclick="openModal('우리 반', '우리 반\n이안\n\n우리 반은\n말썽꾸러기 공장이야\n하루에도\n사고가 몇 번씩\n빵빵 터져\n선생님은\n매일매일 웃었다\n그러다가 어느 날\n진짜 폭발할 뻔했지\n그래도 우리 반이\n제일 좋아!')">
+                    <h3>우리 반</h3>
+                   
+                </div>
+
+                <div class="poem-card" onclick="openModal('기분 좋은 날', '기분 좋은 날\n\n이안\n\n오늘은 참 기분이 좋아\n구름도 내 편인 것 같아\n바람도 살랑살랑\n내 볼을 간질이며\n잘했어 하고 말하는 것 같아\n엄마도 웃고\n아빠도 웃고\n나도 같이 웃었어\n이렇게 웃음이 많은 날은\n그냥 좋아서 좋은 날이야')">
+                    <h3>기분 좋은 날</h3>
+                   
+                </div>
+
+                <div class="poem-card" onclick="openModal('눈물', '눈물\n\n박목월\n\n눈물이\n톡 떨어졌습니다\n내가 울어도\n아무도 모릅니다\n손등으로\n쓱쓱 문질러도\n마음속 눈물은\n아직 안 말랐습니다')">
+                    <h3>눈물</h3>
+                  
+                </div>
+
+                <div class="poem-card" onclick="openModal('억울해', '억울해\n\n이상교\n\n나는 분명히\n하지 않았는데\n동생이 울었다고\n엄마는 나를 혼냈다\n억울하다\n너무너무 억울하다\n그런데 말해도\n아무도 안 믿는다\n그래서 더\n억울하다')">
+                    <h3>억울해</h3>
+                    
+                </div>
+
+                <div class="poem-card" onclick="openModal('조용한 시간', '조용한 시간\n\n김용택\n\n아무 말도 안 하고\n그냥 가만히 있고 싶을 때가 있어\n책상에 턱을 괴고\n창밖만 바라보거나\n아무도 나를\n부르지 않았으면 좋겠어\n그냥 조용히\n나랑만 있고 싶은 날이 있어')">
+                    <h3>조용한 시간</h3>
+                   
+                </div>
+
+                <div class="poem-card" onclick="openModal('ABC', 'ABC\n\nA 에이, 오늘 되게 재수 없네, 중학생 형한테 돈을 뺏겼으니!\nB 비, 비까지 오네, 우산도 안 가지고 왔는데!\nC 씨, 분풀이할 데도 없고, 정말 짜증나네!')">
+                    <h3>ABC</h3>
+                   
+                </div>
+
+                <div class="poem-card" onclick="openModal('겨울방학', '겨울방학\n\n정연철\n\n겨우겨우 다녔어. 가기싫은데도 말이야\n울기도 하고 엄마한테 짜증도 냈어. 근데 이제\n방에서 뒹굴뒹굴 실천 늦잠 잘 거야\n학교 안 가도 되니까 나 게으름뱅이가 될 거야')">
+                    <h3>겨울방학</h3>
+                    
+                </div>
+
+                <div class="poem-card" onclick="openModal('학교와 집 사이', '학교와 집 사이\n\n학교와 집 사이는\n후다닥 걸어서 가면\n단 5분 거리.\n\n하지만 나는\n다섯 시간이나 걸린다.\n\n수학은 영재수학\n국어는 독서논술\n영어는 웰컴 투 영어나라\n컴퓨터 워드 3급\n태권도 품세 심사\n학교와 집 사이가\n점점 더 멀어져 간다.')">
+                    <h3>학교와 집 사이</h3>
+                 
+                </div>
+            </div>
+
+            <div class="reflection-section">
+                <div class="reflection-card">
+                    <h3 class="reflection-title">💭 감상 후 활동</h3>
+                    
+                    <div class="poem-selection">
+                        <p class="selection-question">감상한 시 중 가장 마음에 드는 작품을 골라 봅시다</p>
+                        <select id="poemSelect" class="poem-select" onchange="showSelectedPoem()">
+                            <option value="">시를 선택해주세요</option>
+                            <option value="내 동생">내 동생 - 김동환</option>
+                            <option value="우리 반">우리 반 - 이안</option>
+                            <option value="기분 좋은 날">기분 좋은 날 - 이안</option>
+                            <option value="눈물">눈물 - 박목월</option>
+                            <option value="억울해">억울해 - 이상교</option>
+                            <option value="조용한 시간">조용한 시간 - 김용택</option>
+                            <option value="ABC">ABC</option>
+                            <option value="겨울방학">겨울방학 - 정연철</option>
+                            <option value="학교와 집 사이">학교와 집 사이</option>
+                        </select>
+                    </div>
+
+                    <div id="selectedPoemDisplay" class="selected-poem-display" style="display: none;">
+                        <h4 class="selected-poem-title">선택한 시</h4>
+                        <div id="selectedPoemContent" class="selected-poem-content"></div>
+                    </div>
+
+                    <div id="reflectionQuestion" class="reflection-question" style="display: none;">
+                        <p class="question-text">이 시를 읽고 든 생각이나 느낌을 표현해 보세요</p>
+                        <textarea id="reflectionTextarea" class="reflection-textarea" placeholder="여기에 느낌이나 생각을 자유롭게 적어보세요..."></textarea>
+                        
+                        <div class="emotion-words-section">
+                            <button type="button" class="emotion-words-btn" onclick="openEmotionWordsModal()">
+                                (참고) 감정을 표현하는 낱말
+                            </button>
+                        </div>
+
+                        <div class="color-selection-section">
+                            <p class="color-question-text">이 시에 대한 생각과 느낌을 색깔로 나타낸다면?</p>
+                            
+                            <div class="color-palette">
+                                <div class="grayscale-palette">
+                                    <div class="grayscale-title">회색조</div>
+                                    <div class="grayscale-colors">
+                                        <div class="grayscale-color" data-color="#FFFFFF" style="background-color: #FFFFFF;" title="흰색"></div>
+                                        <div class="grayscale-color" data-color="#F5F5F5" style="background-color: #F5F5F5;" title="연한 회색"></div>
+                                        <div class="grayscale-color" data-color="#E0E0E0" style="background-color: #E0E0E0;" title="밝은 회색"></div>
+                                        <div class="grayscale-color" data-color="#BDBDBD" style="background-color: #BDBDBD;" title="중간 회색"></div>
+                                        <div class="grayscale-color" data-color="#757575" style="background-color: #757575;" title="진한 회색"></div>
+                                        <div class="grayscale-color" data-color="#424242" style="background-color: #424242;" title="어두운 회색"></div>
+                                        <div class="grayscale-color" data-color="#212121" style="background-color: #212121;" title="매우 어두운 회색"></div>
+                                        <div class="grayscale-color" data-color="#000000" style="background-color: #000000;" title="검은색"></div>
+                                    </div>
+                                </div>
+
+                                <div class="main-palette">
+                                    <div class="palette-title">색상 팔레트</div>
+                                    <div class="color-grid" id="colorGrid">
+                                        </div>
+                                </div>
+
+                                <div class="custom-color-section">
+                                    <button type="button" class="custom-color-btn" onclick="openCustomColorPicker()">
+                                        + 사용자 정의 색상
+                                    </button>
+                                    <input type="color" id="customColorPicker" class="custom-color-picker" style="display: none;" onchange="addCustomColor(this.value)">
+                                </div>
+                            </div>
+
+                            <div id="selectedColorDisplay" class="selected-color-display" style="display: none;">
+                                <p class="selected-color-text">선택한 색상:</p>
+                                <div class="selected-color-preview">
+                                    <div id="selectedColorBox" class="selected-color-box"></div>
+                                    <span id="selectedColorName" class="selected-color-name"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="activity2" class="section activity2">
+            <h2 class="section-title">🎨 활동 2: 마음 빛 소리 담기</h2>
+            <p style="text-align: center; font-size: 1.2rem; color: #333; margin-bottom: 2rem;">
+                자신이 고른 시에 대한 생각이나 느낌을 그림으로 표현해 봅시다!
+            </p>
+
+            <div class="guide-container">
+                <h3 style="font-size: 1.6rem; margin-bottom: 1.5rem; color: #333; text-align: center;">
+                    🎵 뮤지컬 캔버스 사용법 한눈에 보기
+                </h3>
+                
+                <ol class="guide-steps">
+                    <li>웹에서 '뮤지컬 캔버스'를 검색해 홈페이지에 들어갑니다.</li>
+                    <li>화면 중앙 흰색 창(캔버스)에 원하는 그림을 자유롭게 그립니다.</li>
+                    <li>왼쪽 팔레트에서 색상과 브러시(붓, 스프레이, 페인트) 도구를 골라 사용할 수 있습니다.</li>
+                    <li>브러시의 크기를 조절해 그림을 더 세밀하게 표현할 수 있습니다.</li>
+                    <li>'UNDO' 버튼으로 한 단계 이전으로 돌아가거나, 'CLEAR' 버튼으로 전체 그림을 지울 수 있습니다.</li>
+                    <li>그림을 완성한 뒤, 하단의 필터 기능으로 분위기를 바꿀 수 있습니다.</li>
+                    <li>'GENERATE MUSIC' 버튼을 누르면, AI가 그림의 느낌을 설명하고 그 느낌대로 음악을 만들어 줍니다.</li>
+                    <li>'CONRINVE DRAWING' 버튼으로 그림을 수정하거나, 링크로 친구들과 공유할 수 있습니다.</li>
+                </ol>
+
+                <a href="https://artsandculture.google.com/experiment/musical-canvas/6AF2kMdrQhI4tQ" target="_blank" rel="noopener noreferrer" class="canvas-btn">
+                    🎨  바로가기
+                </a>
+
+                <h3 style="font-size: 1.4rem; margin: 1.5rem 0 1rem; color: #333;">
+                    💡 창작 팁
+                </h3>
+                <div class="tips">
+                    <div class="tip-card blue">
+                        <div class="tip-title">색상 선택</div>
+                        <p class="tip-desc">시에서 느낀 감정에 맞는 색상을 선택해보세요. 따뜻한 감정은 따뜻한 색, 차가운 감정은 차가운 색으로!</p>
+                    </div>
+                    <div class="tip-card green">
+                        <div class="tip-title">자유로운 표현</div>
+                        <p class="tip-desc">정확한 그림보다는 마음에서 우러나오는 자유로운 표현이 더 아름다운 음악을 만들어줍니다!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="activity3" class="section activity3">
+            <h2 class="section-title">🤝 활동 3: 함께 나누기</h2>
+            <p style="text-align: center; font-size: 1.2rem; color: #333; margin-bottom: 2rem;">
+                친구들과 작품을 공유하고 서로의 생각을 나누어요!
+            </p>
+
+            <div class="padlet-container">
+                <h3 style="font-size: 1.6rem; margin-bottom: 1.5rem; color: #333; text-align: center;">
+                    🌟 우리들의 작품을 공유해요
+                </h3>
+                
+                <div class="padlet-embed" style="border:1px solid rgba(0,0,0,0.1);border-radius:2px;box-sizing:border-box;overflow:hidden;position:relative;width:100%;background:#F4F4F4"><p style="padding:0;margin:0"><iframe src="https://padlet.com/embed/theri0g2todsunhh" frameborder="0" allow="camera;microphone;geolocation;display-capture;clipboard-write" style="width:100%;height:608px;display:block;padding:0;margin:0"></iframe></p><div style="display:flex;align-items:center;justify-content:end;margin:0;height:28px"><a href="https://padlet.com?ref=embed" style="display:block;flex-grow:0;margin:0;border:none;padding:0;text-decoration:none" target="_blank"><div style="display:flex;align-items:center;"><img src="https://padlet.net/embeds/made_with_padlet_2022.png" width="114" height="28" style="padding:0;margin:0;background:0 0;border:none;box-shadow:none" alt="Padlet으로 만듦"></div></a></div></div>
+            </div>
+        </section>
+    </div>
+
+    <div id="poemModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle" class="poem-title-modal"></h2>
+            <div id="modalContent" class="poem-content"></div>
+        </div>
+    </div>
+
+    <div id="emotionWordsModal" class="emotion-modal">
+        <div class="emotion-modal-content">
+            <span class="emotion-close">&times;</span>
+            <h2 class="emotion-title">💭 감정을 표현하는 낱말</h2>
+            
+            <div class="emotion-categories">
+                <div class="emotion-category">
+                    <h4>😊 기쁜 감정</h4>
+                    <div class="emotion-words">
+                        <span class="emotion-word">기쁘다</span>
+                        <span class="emotion-word">즐겁다</span>
+                        <span class="emotion-word">행복하다</span>
+                        <span class="emotion-word">신나다</span>
+                        <span class="emotion-word">웃기다</span>
+                        <span class="emotion-word">유쾌하다</span>
+                        <span class="emotion-word">상쾌하다</span>
+                        <span class="emotion-word">만족스럽다</span>
+                        <span class="emotion-word">뿌듯하다</span>
+                        <span class="emotion-word">감동적이다</span>
+                    </div>
+                </div>
+
+                <div class="emotion-category">
+                    <h4>😢 슬픈 감정</h4>
+                    <div class="emotion-words">
+                        <span class="emotion-word">슬프다</span>
+                        <span class="emotion-word">우울하다</span>
+                        <span class="emotion-word">서글프다</span>
+                        <span class="emotion-word">눈물겹다</span>
+                        <span class="emotion-word">아쉽다</span>
+                        <span class="emotion-word">그리웁다</span>
+                        <span class="emotion-word">외롭다</span>
+                        <span class="emotion-word">허전하다</span>
+                        <span class="emotion-word">서운하다</span>
+                        <span class="emotion-word">애잔하다</span>
+                    </div>
+                </div>
+
+                <div class="emotion-category">
+                    <h4>😠 화나는 감정</h4>
+                    <div class="emotion-words">
+                        <span class="emotion-word">화나다</span>
+                        <span class="emotion-word">짜증나다</span>
+                        <span class="emotion-word">억울하다</span>
+                        <span class="emotion-word">속상하다</span>
+                        <span class="emotion-word">답답하다</span>
+                        <span class="emotion-word">불쾌하다</span>
+                        <span class="emotion-word">분하다</span>
+                        <span class="emotion-word">열받다</span>
+                        <span class="emotion-word">신경질적이다</span>
+                        <span class="emotion-word">괴롭다</span>
+                    </div>
+                </div>
+
+                <div class="emotion-category">
+                    <h4>😨 무서운 감정</h4>
+                    <div class="emotion-words">
+                        <span class="emotion-word">무섭다</span>
+                        <span class="emotion-word">두렵다</span>
+                        <span class="emotion-word">불안하다</span>
+                        <span class="emotion-word">조마조마하다</span>
+                        <span class="emotion-word">긴장하다</span>
+                        <span class="emotion-word">떨리다</span>
+                        <span class="emotion-word">조심스럽다</span>
+                        <span class="emotion-word">불안정하다</span>
+                        <span class="emotion-word">초조하다</span>
+                        <span class="emotion-word">위험하다</span>
+                    </div>
+                </div>
+
+                <div class="emotion-category">
+                    <h4>😍 좋아하는 감정</h4>
+                    <div class="emotion-words">
+                        <span class="emotion-word">좋다</span>
+                        <span class="emotion-word">사랑한다</span>
+                        <span class="emotion-word">예쁘다</span>
+                        <span class="emotion-word">아름답다</span>
+                        <span class="emotion-word">귀엽다</span>
+                        <span class="emotion-word">멋지다</span>
+                        <span class="emotion-word">훌륭하다</span>
+                        <span class="emotion-word">감탄스럽다</span>
+                        <span class="emotion-word">인상적이다</span>
+                        <span class="emotion-word">끌린다</span>
+                    </div>
+                </div>
+
+                <div class="emotion-category">
+                    <h4>🤔 생각하는 감정</h4>
+                    <div class="emotion-words">
+                        <span class="emotion-word">생각난다</span>
+                        <span class="emotion-word">기억난다</span>
+                        <span class="emotion-word">느껴진다</span>
+                        <span class="emotion-word">알겠다</span>
+                        <span class="emotion-word">이해된다</span>
+                        <span class="emotion-word">공감된다</span>
+                        <span class="emotion-word">깨닫는다</span>
+                        <span class="emotion-word">느끼다</span>
+                        <span class="emotion-word">깨우친다</span>
+                        <span class="emotion-word">알아차린다</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 시 데이터 저장
+        const poemData = {
+            '내 동생': '내 동생\n\n김동환\n\n내 동생은 얍삽하다.\n우리 엄마가 무슨 일 시키면\n똥 누고 싶다면서 똥 누러 간다.\n\n내 동생은 짜증난다.\n내가 뭐 해라 하면\n으아하면서 도망간다.',
+            '우리 반': '우리 반\n이안\n\n우리 반은\n말썽꾸러기 공장이야\n하루에도\n사고가 몇 번씩\n빵빵 터져\n선생님은\n매일매일 웃었다\n그러다가 어느 날\n진짜 폭발할 뻔했지\n그래도 우리 반이\n제일 좋아!',
+            '기분 좋은 날': '기분 좋은 날\n\n이안\n\n오늘은 참 기분이 좋아\n구름도 내 편인 것 같아\n바람도 살랑살랑\n내 볼을 간질이며\n잘했어 하고 말하는 것 같아\n엄마도 웃고\n아빠도 웃고\n나도 같이 웃었어\n이렇게 웃음이 많은 날은\n그냥 좋아서 좋은 날이야',
+            '눈물': '눈물\n\n박목월\n\n눈물이\n톡 떨어졌습니다\n내가 울어도\n아무도 모릅니다\n손등으로\n쓱쓱 문질러도\n마음속 눈물은\n아직 안 말랐습니다',
+            '억울해': '억울해\n\n이상교\n\n나는 분명히\n하지 않았는데\n동생이 울었다고\n엄마는 나를 혼냈다\n억울하다\n너무너무 억울하다\n그런데 말해도\n아무도 안 믿는다\n그래서 더\n억울하다',
+            '조용한 시간': '조용한 시간\n\n김용택\n\n아무 말도 안 하고\n그냥 가만히 있고 싶을 때가 있어\n책상에 턱을 괴고\n창밖만 바라보거나\n아무도 나를\n부르지 않았으면 좋겠어\n그냥 조용히\n나랑만 있고 싶은 날이 있어',
+            'ABC': 'ABC\n\nA 에이, 오늘 되게 재수 없네, 중학생 형한테 돈을 뺏겼으니!\nB 비, 비까지 오네, 우산도 안 가지고 왔는데!\nC 씨, 분풀이할 데도 없고, 정말 짜증나네!',
+            '겨울방학': '겨울방학\n\n정연철\n\n겨우겨우 다녔어. 가기싫은데도 말이야\n울기도 하고 엄마한테 짜증도 냈어. 근데 이제\n방에서 뒹굴뒹굴 실천 늦잠 잘 거야\n학교 안 가도 되니까 나 게으름뱅이가 될 거야',
+            '학교와 집 사이': '학교와 집 사이\n\n학교와 집 사이는\n후다닥 걸어서 가면\n단 5분 거리.\n\n하지만 나는\n다섯 시간이나 걸린다.\n\n수학은 영재수학\n국어는 독서논술\n영어는 웰컴 투 영어나라\n컴퓨터 워드 3급\n태권도 품세 심사\n학교와 집 사이가\n점점 더 멀어져 간다.'
+        };
+
+        // 시 선택 기능
+        function showSelectedPoem() {
+            const select = document.getElementById('poemSelect');
+            const selectedPoemDisplay = document.getElementById('selectedPoemDisplay');
+            const selectedPoemContent = document.getElementById('selectedPoemContent');
+            const reflectionQuestion = document.getElementById('reflectionQuestion');
+            
+            if (select.value && poemData[select.value]) {
+                selectedPoemContent.textContent = poemData[select.value];
+                selectedPoemDisplay.style.display = 'block';
+                reflectionQuestion.style.display = 'block';
+                
+                // 선택한 시 영역으로 부드럽게 스크롤
+                selectedPoemDisplay.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } else {
+                selectedPoemDisplay.style.display = 'none';
+                reflectionQuestion.style.display = 'none';
+            }
+        }
+
+        // 감정 표현 낱말 모달 관련 함수들
+        function openEmotionWordsModal() {
+            const emotionModal = document.getElementById('emotionWordsModal');
+            emotionModal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeEmotionWordsModal() {
+            const emotionModal = document.getElementById('emotionWordsModal');
+            emotionModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // 감정 낱말 클릭 시 텍스트 영역에 추가
+        function addEmotionWord(word) {
+            const textarea = document.getElementById('reflectionTextarea');
+            const currentText = textarea.value;
+            
+            if (currentText.trim() === '') {
+                textarea.value = word;
+            } else {
+                textarea.value = currentText + ', ' + word;
+            }
+            
+            textarea.focus();
+        }
+
+        // 색상 팔레트 생성
+        function generateColorPalette() {
+            const colorGrid = document.getElementById('colorGrid');
+            const colors = [];
+            
+            // HSL 색상 공간을 이용한 색상 생성
+            const rows = 10;
+            const cols = 12;
+            
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    // 명도 (밝기): 위에서 아래로 어두워짐
+                    const lightness = 90 - (row * 8);
+                    
+                    // 채도: 위에서 아래로 낮아짐
+                    const saturation = 100 - (row * 8);
+                    
+                    // 색조: 왼쪽에서 오른쪽으로 변화
+                    let hue;
+                    if (col < 3) {
+                        // 보라색-파랑 계열
+                        hue = 240 + (col * 30);
+                    } else if (col < 6) {
+                        // 빨강-주황 계열
+                        hue = 0 + ((col - 3) * 30);
+                    } else if (col < 9) {
+                        // 노랑-초록 계열
+                        hue = 60 + ((col - 6) * 30);
+                    } else {
+                        // 초록-청록 계열
+                        hue = 120 + ((col - 9) * 30);
+                    }
+                    
+                    const color = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+                    colors.push(color);
+                }
+            }
+            
+            // 색상 그리드 생성
+            colors.forEach((color, index) => {
+                const colorCell = document.createElement('div');
+                colorCell.className = 'color-cell';
+                colorCell.style.backgroundColor = color;
+                colorCell.dataset.color = color;
+                colorCell.title = `색상 ${index + 1}`;
+                colorCell.onclick = function() { selectColor(this); };
+                colorGrid.appendChild(colorCell);
+            });
+        }
+
+        // 색상 선택 관련 함수들
+        function selectColor(colorElement) {
+            // 모든 색상 옵션에서 선택 상태 제거
+            document.querySelectorAll('.color-cell, .grayscale-color').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // 클릭한 색상에 선택 상태 추가
+            colorElement.classList.add('selected');
+            
+            // 선택한 색상 표시
+            const selectedColor = colorElement.dataset.color;
+            const selectedColorDisplay = document.getElementById('selectedColorDisplay');
+            const selectedColorBox = document.getElementById('selectedColorBox');
+            const selectedColorName = document.getElementById('selectedColorName');
+            
+            selectedColorBox.style.backgroundColor = selectedColor;
+            selectedColorName.textContent = getColorName(selectedColor);
+            selectedColorDisplay.style.display = 'block';
+        }
+
+        // 사용자 정의 색상 선택기 열기
+        function openCustomColorPicker() {
+            const colorPicker = document.getElementById('customColorPicker');
+            colorPicker.click();
+        }
+
+        // 사용자 정의 색상 추가
+        function addCustomColor(color) {
+            const colorGrid = document.getElementById('colorGrid');
+            
+            // 새로운 색상 셀 생성
+            const newColorCell = document.createElement('div');
+            newColorCell.className = 'color-cell';
+            newColorCell.dataset.color = color;
+            newColorCell.style.backgroundColor = color;
+            newColorCell.title = '사용자 정의 색상';
+            newColorCell.onclick = function() { selectColor(this); };
+            
+            // 기존 색상들에서 선택 상태 제거
+            document.querySelectorAll('.color-cell, .grayscale-color').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // 새 색상 셀에 선택 상태 추가
+            newColorCell.classList.add('selected');
+            
+            // 색상 그리드에 추가 (맨 끝에)
+            colorGrid.appendChild(newColorCell);
+            
+            // 선택한 색상 표시
+            const selectedColorDisplay = document.getElementById('selectedColorDisplay');
+            const selectedColorBox = document.getElementById('selectedColorBox');
+            const selectedColorName = document.getElementById('selectedColorName');
+            
+            selectedColorBox.style.backgroundColor = color;
+            selectedColorName.textContent = '사용자 정의 색상';
+            selectedColorDisplay.style.display = 'block';
+        }
+
+        // 색상 코드를 색상 이름으로 변환
+        function getColorName(colorCode) {
+            const colorNames = {
+                '#FFFFFF': '흰색',
+                '#F5F5F5': '연한 회색',
+                '#E0E0E0': '밝은 회색',
+                '#BDBDBD': '중간 회색',
+                '#757575': '진한 회색',
+                '#424242': '어두운 회색',
+                '#212121': '매우 어두운 회색',
+                '#000000': '검은색'
+            };
+            
+            return colorNames[colorCode] || '선택한 색상';
+        }
+
+        // 부드러운 스크롤 함수
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            const navHeight = document.querySelector('.nav').offsetHeight;
+            const targetPosition = section.offsetTop - navHeight;
+            
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+            
+            // 네비게이션 버튼 활성화 상태 변경
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // 모달 관련 함수들
+        const modal = document.getElementById('poemModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalContent = document.getElementById('modalContent');
+        const closeBtn = document.querySelector('.close');
+
+        function openModal(title, content) {
+            modalTitle.textContent = title;
+            modalContent.textContent = content;
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // 이벤트 리스너들
+        closeBtn.addEventListener('click', closeModal);
+
+        // 감정 표현 낱말 모달 이벤트 리스너
+        const emotionCloseBtn = document.querySelector('.emotion-close');
+        emotionCloseBtn.addEventListener('click', closeEmotionWordsModal);
+
+        // 감정 낱말 클릭 이벤트
+        document.addEventListener('DOMContentLoaded', function() {
+            const emotionWords = document.querySelectorAll('.emotion-word');
+            emotionWords.forEach(word => {
+                word.addEventListener('click', function() {
+                    addEmotionWord(this.textContent);
+                    closeEmotionWordsModal();
+                });
+            });
+
+            // 색상 팔레트 생성
+            generateColorPalette();
+
+            // 회색조 색상 클릭 이벤트
+            const grayscaleColors = document.querySelectorAll('.grayscale-color');
+            grayscaleColors.forEach(color => {
+                color.addEventListener('click', function() {
+                    selectColor(this);
+                });
+            });
+        });
+
+        // 모달 배경 클릭으로 닫기
+        window.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                closeModal();
+            }
+            if (event.target.id === 'emotionWordsModal') {
+                closeEmotionWordsModal();
+            }
+        });
+
+        // ESC 키로 모달 닫기
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                if (modal.style.display === 'block') {
+                    closeModal();
+                }
+                if (document.getElementById('emotionWordsModal').style.display === 'block') {
+                    closeEmotionWordsModal();
+                }
+            }
+        });
+
+        // 스크롤에 따른 네비게이션 활성화
+        window.addEventListener('scroll', function() {
+            const sections = ['activity1', 'activity2', 'activity3'];
+            const navHeight = document.querySelector('.nav').offsetHeight;
+            const scrollPosition = window.scrollY + navHeight + 100;
+
+            sections.forEach((sectionId, index) => {
+                const section = document.getElementById(sectionId);
+                const sectionTop = section.offsetTop;
+                const sectionBottom = sectionTop + section.offsetHeight;
+
+                if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+                    document.querySelectorAll('.nav-btn')[index].classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
