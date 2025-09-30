@@ -965,7 +965,12 @@
                                     <span id="selectedColorName" class="selected-color-name"></span>
                                 </div>
                             </div>
-                        </div>
+                            
+                            <div id="colorReasonSection" class="reflection-question" style="display: none; margin-top: 1.5rem;">
+                                <p class="question-text">그렇게 나타낸 까닭</p>
+                                <textarea id="colorReasonTextarea" class="reflection-textarea" rows="4"></textarea>
+                            </div>
+                            </div>
                     </div>
                 </div>
             </div>
@@ -1173,6 +1178,16 @@
             } else {
                 selectedPoemDisplay.style.display = 'none';
                 reflectionQuestion.style.display = 'none';
+                 // === 추가된 부분 시작 ===
+                // 시 선택이 해제되면 색상 선택 및 이유 섹션도 숨김
+                document.getElementById('selectedColorDisplay').style.display = 'none';
+                document.getElementById('colorReasonSection').style.display = 'none';
+                document.getElementById('colorReasonTextarea').value = '';
+                // 모든 색상 선택 상태 제거
+                document.querySelectorAll('.color-cell, .grayscale-color').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                // === 추가된 부분 끝 ===
             }
         }
 
@@ -1270,8 +1285,19 @@
             const selectedColorName = document.getElementById('selectedColorName');
             
             selectedColorBox.style.backgroundColor = selectedColor;
-            selectedColorName.textContent = getColorName(selectedColor);
+            const colorName = getColorName(selectedColor);
+            selectedColorName.textContent = colorName;
             selectedColorDisplay.style.display = 'block';
+            
+            // === 수정된 부분 시작 ===
+            const colorReasonSection = document.getElementById('colorReasonSection');
+            const colorReasonTextarea = document.getElementById('colorReasonTextarea');
+            
+            const displayName = (colorName === '선택한 색상') ? '이 색' : colorName;
+            
+            colorReasonTextarea.value = `나는 ${displayName}이 떠오른다.\n왜냐하면 `;
+            colorReasonSection.style.display = 'block';
+             // === 수정된 부분 끝 ===
         }
 
         // 사용자 정의 색상 선택기 열기
@@ -1311,6 +1337,14 @@
             selectedColorBox.style.backgroundColor = color;
             selectedColorName.textContent = '사용자 정의 색상';
             selectedColorDisplay.style.display = 'block';
+
+            // === 수정된 부분 시작 ===
+            const colorReasonSection = document.getElementById('colorReasonSection');
+            const colorReasonTextarea = document.getElementById('colorReasonTextarea');
+            
+            colorReasonTextarea.value = `나는 '사용자 정의 색상'이 떠오른다.\n왜냐하면 `;
+            colorReasonSection.style.display = 'block';
+            // === 수정된 부분 끝 ===
         }
 
         // 색상 코드를 색상 이름으로 변환
